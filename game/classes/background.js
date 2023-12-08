@@ -1,13 +1,10 @@
-import 'phaser'
-
 let sharedkey = 'bg5';
-
-export default class BG
+class BG
 {
-	scene: Phaser.Scene;
-	key: string;
-	backgroundImage: Phaser.GameObjects.Image;
-	constructor(scene: Phaser.Scene, key?: string)
+	scene;
+	key;
+	backgroundImage;
+	constructor(scene, key)
 	{
 		this.scene = scene;
 		this.key = key || BG.sharedKey();
@@ -17,10 +14,10 @@ export default class BG
 		const fx = bg.postFX?.addBlur(0, 0, 0, 8);
 		this.backgroundImage = bg;
 	}
-	static sharedKey = function(): string {
+	static sharedKey = function() {
 		return sharedkey;
 	}
-	static setSharedKey = function(key: string): void {
+	static setSharedKey = function(key) {
 		sharedkey = key;
 	}
 }

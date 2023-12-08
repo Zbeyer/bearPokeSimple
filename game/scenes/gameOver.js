@@ -1,8 +1,4 @@
-import 'phaser'
-import BearPoke from "../classes/bear";
-import BG from "../classes/background";
-
-export default class GameOver extends Phaser.Scene
+class GameOver extends Phaser.Scene
 {
 	preload ()
 	{ }
@@ -11,12 +7,12 @@ export default class GameOver extends Phaser.Scene
 	{
 		const menuWidth = this.cameras.main.width * 0.50;
 		const menuHeight = this.cameras.main.height;
-		const menuX: number = this.cameras.main.width - menuWidth;
-		const menuY: number = 0;
+		const menuX = this.cameras.main.width - menuWidth;
+		const menuY = 0;
 
-		let bg: Phaser.GameObjects.Image = new BG(this).backgroundImage;
+		let bg = new BG(this).backgroundImage;
 
-		let scoreBG: Phaser.GameObjects.Rectangle = this.add.rectangle(0, 0, this.cameras.main.width - menuWidth, this.cameras.main.height, 0x000000);
+		let scoreBG = this.add.rectangle(0, 0, this.cameras.main.width - menuWidth, this.cameras.main.height, 0x000000);
 		scoreBG.setOrigin(0, 0);
 		scoreBG.setBlendMode(Phaser.BlendModes.MULTIPLY);
 		scoreBG.setAlpha(0.667);
@@ -43,7 +39,7 @@ export default class GameOver extends Phaser.Scene
 			'', // empty line
 			'Pokes: ' + BearPoke.shared().pokes,
 			'Healz: ' + BearPoke.shared().healingAnimals,
-			'time:\n' +  time,
+			'time:\n' + time,
 			'', // empty line
 			'Bear Pokes:\n' + BearPoke.shared().bearPokes,
 
@@ -52,7 +48,7 @@ export default class GameOver extends Phaser.Scene
 		rectangle.setOrigin(0, 0);
 		rectangle.setBlendMode(Phaser.BlendModes.MULTIPLY);
 		rectangle.setAlpha(0.50);
-		const heartsBg: Phaser.GameObjects.Rectangle = this.add.rectangle(0, this.cameras.main.height - 16,
+		const heartsBg = this.add.rectangle(0, this.cameras.main.height - 16,
 			BearPoke.shared().maxHearts * 80, 48,
 			0x000000);
 		heartsBg.alpha = 0.50;
@@ -64,19 +60,19 @@ export default class GameOver extends Phaser.Scene
 		this.createButtons(menuX, menuY, menuWidth);
 	}
 
-	createButtons(menuX: number, menuY: number, menuWidth: number)
+	createButtons(menuX, menuY, menuWidth)
 	{
-		const game: Phaser.Game = this.game;
+		const game = this.game;
 		const scene = game.scene;
-		let x: number;
-		let y: number;
+		let x;
+		let y;
 
 		const buttonOffsetX = 8;
 		const buttonOffsetY = 8;
-		const buttonWidth: number = menuWidth - buttonOffsetX * 2.0;
-		const buttonScale: number = buttonWidth / 40; // the button image is 40px wide
-		const buttonHeight: number = 76.0;
-		const buttons: Phaser.GameObjects.Image[] = [
+		const buttonWidth = menuWidth - buttonOffsetX * 2.0;
+		const buttonScale = buttonWidth / 40; // the button image is 40px wide
+		const buttonHeight = 76.0;
+		const buttons = [
 			this.add.image(menuX + buttonOffsetX, menuY + buttonOffsetY, 'button'),
 			this.add.image(menuX + buttonOffsetX, menuY + buttonHeight + buttonOffsetY * 2.0, 'button'),
 			this.add.image(menuX + buttonOffsetX, menuY + buttonHeight * 2.0 + buttonOffsetY * 3.0, 'button'),

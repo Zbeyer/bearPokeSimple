@@ -1,31 +1,29 @@
-import Animal from "./animal";
-
 class BearPoke //implements BearPokeInterface
 {
-	scene?: Phaser.Scene;
-	maxHearts: number;
-	hearts: number;
-	drawLimit: number;
-	lastPoke: number;
-	startTime: number;
-	stoppedTime: number;
+	scene;
+	maxHearts;
+	hearts;
+	drawLimit;
+	lastPoke;
+	startTime;
+	stoppedTime;
 
-	animals: Animal[];
-	score: number;
-	pokes: number;
-	bearPokes: number;
-	healingAnimals: number;
-	isGameOver: boolean;
-	timerArtWidth: number;
+	animals;
+	score;
+	pokes;
+	bearPokes;
+	healingAnimals;
+	isGameOver;
+	timerArtWidth;
 
-	heartArt: Phaser.GameObjects.Image[];
-	heartContainer: Phaser.GameObjects.Image[];
-	scoreCard?: Phaser.GameObjects.Text;
-	timerArt?: Phaser.GameObjects.Rectangle;
+	heartArt;
+	heartContainer;
+	scoreCard;
+	timerArt;
 
 	constructor()
 	{
-		this.maxHearts = 		Session.get('bear_max_hearts') || 5;
+		this.maxHearts = 3;
 		this.hearts = this.maxHearts;
 		this.pokes = 0;
 		this.bearPokes = 0;
@@ -34,7 +32,7 @@ class BearPoke //implements BearPokeInterface
 		this.lastPoke = (new Date()).getTime();
 		this.startTime = this.lastPoke;
 		this.stoppedTime = 0;
-		this.drawLimit = Session.get('bear_max_animals') || 3;
+		this.drawLimit = 3;
 		this.animals = [];
 
 		this.isGameOver = false;
@@ -43,14 +41,14 @@ class BearPoke //implements BearPokeInterface
 		this.heartArt = [];
 		this.heartContainer = [];
 	}
-	shared(): BearPoke
+	shared()
 	{
 		return BearPoke.shared();
 	}
 
-	static shared(): BearPoke
+	static shared()
 	{
-		let shared: BearPoke = SharedBP;
+		let shared = SharedBP;
 		if (!shared)
 		{
 			shared = BearPoke.newGame();
@@ -59,7 +57,7 @@ class BearPoke //implements BearPokeInterface
 		return shared;
 	}
 
-	static newGame(): BearPoke
+	static newGame()
 	{
 		SharedBP = new BearPoke();
 		return BearPoke.shared();
@@ -72,7 +70,7 @@ class BearPoke //implements BearPokeInterface
 		shared.lastPoke = (new Date()).getTime();
 	}
 
-	poked(animal: any)
+	poked(animal)
 	{
 		if (animal.poked) return;
 		animal.poked = true;
@@ -102,7 +100,6 @@ class BearPoke //implements BearPokeInterface
 				this.score += 5;
 				break;
 			case 'bear':
-				console.log('bear poked');
 				this.hearts -= 2;
 				if (this.hearts < 1) this.hearts = 0;
 				break;
@@ -110,7 +107,4 @@ class BearPoke //implements BearPokeInterface
 		}
 	}
 }
-
-let SharedBP: BearPoke;
-
-export default BearPoke;
+SharedBP = new BearPoke();

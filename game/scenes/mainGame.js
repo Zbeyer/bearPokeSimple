@@ -1,10 +1,5 @@
-import 'phaser'
-import BearPoke from "../classes/bear";
-import BG from "../classes/background";
-
 let IsDebug = false;
-
-export default class MainGame extends Phaser.Scene
+class MainGame extends Phaser.Scene
 {
 	preload ()
 	{ }
@@ -17,10 +12,9 @@ export default class MainGame extends Phaser.Scene
 		// let shared = BearPoke.shared();
 		let scene = this;
 		let shared = BearPoke.shared();
+		let bg = new BG(this).backgroundImage;
 
-		let bg: Phaser.GameObjects.Image = new BG(this).backgroundImage;
-
-		let scorecardBG: Phaser.GameObjects.Rectangle = this.add.rectangle(0, 0, 180, 24, 0x000000);
+		let scorecardBG = this.add.rectangle(0, 0, 180, 24, 0x000000);
 		scorecardBG.setOrigin(0, 0);
 		scorecardBG.alpha = 0.667;
 
@@ -28,27 +22,31 @@ export default class MainGame extends Phaser.Scene
 		scoreCard.setOrigin(0, 0);
 		shared.scoreCard = scoreCard;
 
-		let heartsBg: Phaser.GameObjects.Rectangle = this.add.rectangle(0, this.cameras.main.height - 32,
+		let heartsBg = this.add.rectangle(0, this.cameras.main.height - 32,
 			shared.hearts * 32, 32,
 			0x000000);
 		heartsBg.setOrigin(0, 0);
 		heartsBg.alpha = 0.667;
 		for (let i = 0; i < shared.hearts; i++)
 		{
-			let newHeartArt: Phaser.GameObjects.Image = scene.add.image(16 + i * 32, this.cameras.main.height - 16, 'heartFull').setScale(3.0);
+			let newHeartArt = scene.add.image(16 + i * 32, this.cameras.main.height - 16, 'heartFull').setScale(3.0);
 			shared.heartArt.push(newHeartArt);
 		}
 
-		shared.heartArt.forEach(function (heart: Phaser.GameObjects.Image) {
+		let hArt = shared.heartArt;
+		let length = hArt.length
+		for (let i = 0; i < length; i++)
+		{
+			let heart = hArt[i];
 			let container = scene.add.image(heart.x, heart.y, 'heartEmpty').setScale(3.0);
 			shared.heartContainer.push(container);
-		});
+		}
 
-		let timerBG: Phaser.GameObjects.Rectangle = scene.add.rectangle(heartsBg.x + heartsBg.width, heartsBg.y, scene.cameras.main.width - heartsBg.width, heartsBg.height, 0x000000);
+		let timerBG = scene.add.rectangle(heartsBg.x + heartsBg.width, heartsBg.y, scene.cameras.main.width - heartsBg.width, heartsBg.height, 0x000000);
 		timerBG.setOrigin(0, 0);
 		shared.timerArtWidth = timerBG.width;
 
-		let timer: Phaser.GameObjects.Rectangle = scene.add.rectangle(timerBG.x, timerBG.y, shared.timerArtWidth, timerBG.height, 0xFFCC00);
+		let timer = scene.add.rectangle(timerBG.x, timerBG.y, shared.timerArtWidth, timerBG.height, 0xFFCC00);
 		timer.setOrigin(0, 0);
 		shared.timerArt = timer;
 		let gameLoop = setInterval(function () {
@@ -56,7 +54,6 @@ export default class MainGame extends Phaser.Scene
 			{
 				scene.draw(scene);
 				scene.drawTimer(scene);
-				// console.log('gameLoop: %o', new Date().getTime());
 				if (BearPoke.shared().isGameOver)
 				{
 					clearInterval(gameLoop);
@@ -65,14 +62,14 @@ export default class MainGame extends Phaser.Scene
 		}, 1000 / frameRate);
 	}
 
-	drawText(scene: MainGame, text: string)
+	drawText(scene, text)
 	{
 		if (!text) return;
 		const x = 8;
 		const y = scene.cameras.main.height - 80;
 		let textColor = "#FFFFFF";
 
-		let textArt: Phaser.GameObjects.Text = scene.add.text(x, y, text, { fontFamily:'verdana', color: textColor });
+		let textArt = scene.add.text(x, y, text, { fontFamily:'verdana', color: textColor });
 		textArt.setOrigin(0, 0);
 		// textArt.setShadow(0, 0, '#000000', 2, true, true);
 		// textArt.setAlpha(0.8)
@@ -99,7 +96,7 @@ export default class MainGame extends Phaser.Scene
 		return textArt;
 	}
 
-	drawPokeDust(scene: MainGame, x: number = 0, y: number = 0)
+	drawPokeDust(scene, x, y)
 	{
 		const key = 'pokeDust';
 		const lifeTime = 750;
@@ -142,29 +139,29 @@ export default class MainGame extends Phaser.Scene
 				clearTimeout(timeoutDestroy);
 				// timeout = null;
 			}, lingerTime);
-			let scoreCard: Phaser.GameObjects.Text = shared.scoreCard || this.add.text(16, 16, 'Score: 0', { color: '#FFFFFF' });;
+			let scoreCard = shared.scoreCard || this.add.text(16, 16, 'Score: 0', { color: '#FFFFFF' });;
 			scoreCard.setText([
 				'score: ' + shared.score,
 			]);
 		}
 	}
 
-	animals(): string[] {
-		const animals: string[] = ['duck', 'snek', 'deer'];
+	animals() {
+		const animals = ['duck', 'snek', 'deer'];
 		return animals;
 	}
 
-	healingAnimals(): string[] {
-		const animals: string[] = ['fish'];
+	healingAnimals() {
+		const animals = ['fish'];
 		return animals;
 	}
 
-	drawTimer(scene: MainGame)
+	drawTimer(scene)
 	{
 		let shared = BearPoke.shared();
 		if (shared.isGameOver) return;
 
-		const timerLifeTime: number = IsDebug ? 18_000 : Session.get('bear_timer') || 2_600;
+		const timerLifeTime = IsDebug ? 18_000 : 2_600;
 
 		let now = new Date().getTime();
 		let lastPoke = BearPoke.shared().lastPoke || now;
@@ -174,7 +171,7 @@ export default class MainGame extends Phaser.Scene
 
 		let lifeRatio = 1.0 - (timeDelta / timerLifeTime);
 		let pokeTimerWidth = lifeRatio * shared.timerArtWidth;
-		let timer: Phaser.GameObjects.Rectangle = shared.timerArt || scene.add.rectangle(0, 0, pokeTimerWidth, 64, 0xFFCC00);
+		let timer = shared.timerArt || scene.add.rectangle(0, 0, pokeTimerWidth, 64, 0xFFCC00);
 		timer.width = pokeTimerWidth;
 
 		let heartsBeforeNotPoking = shared.hearts;
@@ -193,14 +190,14 @@ export default class MainGame extends Phaser.Scene
 		}
 	}
 
-	draw(scene: MainGame)
+	draw(scene)
 	{
 		let children = scene.children.list;
-		let images = children.filter(function (child: any) {
+		let images = children.filter(function (child) {
 			return child.texture && child.texture.key;
 		});
-		const animalNames: string[] = scene.animals().concat(scene.healingAnimals()).concat(['bear']);
-		let animals = images.filter(function (image: any) {
+		const animalNames = scene.animals().concat(scene.healingAnimals()).concat(['bear']);
+		let animals = images.filter(function (image) {
 			return animalNames.includes(image.texture.key);
 		});
 
@@ -209,8 +206,8 @@ export default class MainGame extends Phaser.Scene
 		if (shared.isGameOver) return;
 		if (shared.drawLimit < 1) return;
 
-		let seed: number = Math.random()
-		let animalLifeTime: number = IsDebug ? 10_000 : 1_000 * seed + 800;
+		let seed = Math.random()
+		let animalLifeTime = IsDebug ? 10_000 : 1_000 * seed + 800;
 		seed = seed * 2_000;
 
 		const scaleFactor = 8.00;
@@ -223,37 +220,37 @@ export default class MainGame extends Phaser.Scene
 		const appearanceTime = 250;
 		let x = widthMin + seed % widthMax * 0.75 + widthMax * 0.125;
 		let y = heightMin + seed % heightMax * 0.75 + widthMax * 0.125;
-		let newAnimalIndex: number = Math.floor(seed % animalNames.length);
-		let newAnimalName: string = animalNames[newAnimalIndex];
-		let newArt: Phaser.GameObjects.Image = scene.add.image(x, y, newAnimalName);
+		let newAnimalIndex = Math.floor(seed % animalNames.length);
+		let newAnimalName = animalNames[newAnimalIndex];
+		let newArt = scene.add.image(x, y, newAnimalName);
 		newArt.alpha = 0.0; newArt.setScale(0.0);
 		newArt.setInteractive();
 
 		// Make sure we are always tracking the animals...
-		let appear:Phaser.Tweens.Tween = scene.tweens.add({targets: newArt, scale: scaleFactor, alpha: 1.0, ease: 'Power1', duration: appearanceTime });
+		let appear = scene.tweens.add({targets: newArt, scale: scaleFactor, alpha: 1.0, ease: 'Power1', duration: appearanceTime });
 		appear.on('complete', function () {
 			newArt.setScale(scaleFactor);
 			newArt.alpha = 1.0;
 			appear.remove();
 
-			let disappear:Phaser.Tweens.Tween = scene.tweens.add({targets: newArt, scale: 0.0, alpha: 0.0, ease: 'Power1', duration: appearanceTime, delay: animalLifeTime});
+			let disappear = scene.tweens.add({targets: newArt, scale: 0.0, alpha: 0.0, ease: 'Power1', duration: appearanceTime, delay: animalLifeTime});
 			disappear.on('complete', function () {
 				disappear.remove();
 				newArt.destroy();
 			});
 		});
 
-		scene.input.on('gameobjectdown', function (pointer: Phaser.Input.Pointer, gameObject: Phaser.GameObjects.Image)
+		scene.input.on('gameobjectdown', function (pointer, gameObject)
 		{
-			let disappearNow:Phaser.Tweens.Tween = scene.tweens.add({ targets: gameObject, scale: 0.0, alpha: 0.0, ease: 'Power1', duration: appearanceTime});
+			let disappearNow = scene.tweens.add({ targets: gameObject, scale: 0.0, alpha: 0.0, ease: 'Power1', duration: appearanceTime});
 			scene.drawPokeDust(scene, gameObject.x, gameObject.y);
 			scene.drawText(scene, gameObject.texture.key);
 			disappearNow.on('complete', function () {
 				disappearNow.remove();
 				if (BearPoke.shared().isGameOver) return;
 				shared.lastPoke = (new Date()).getTime();
-				let animal: any = gameObject;
-				let poked: boolean = animal.poked || false;
+				let animal = gameObject;
+				let poked = animal.poked || false;
 				let heartsBeforePoke = BearPoke.shared().hearts;
 				BearPoke.shared().poked(gameObject);
 				if (poked) return;
@@ -277,15 +274,15 @@ export default class MainGame extends Phaser.Scene
 					}
 					else
 					{
-						let art: Phaser.GameObjects.Image = BearPoke.shared().heartArt[0];
+						let art = BearPoke.shared().heartArt[0];
 						for (let i = count; i > 0; i--)
 						{
 							let index = shared.heartArt.length;
 							let posX = index * 32 + 16;
-							let newHeartArt: Phaser.GameObjects.Image = scene.add.image(posX, art.y, 'heartFull').setScale(3.0);
+							let newHeartArt = scene.add.image(posX, art.y, 'heartFull').setScale(3.0);
 							shared.heartArt.push(newHeartArt); // Animal gives a heart
 						}
-						shared.heartContainer.forEach(function (container: Phaser.GameObjects.Image) {
+						shared.heartContainer.forEach(function (container) {
 							scene.children.bringToTop(container);
 						});
 					}
