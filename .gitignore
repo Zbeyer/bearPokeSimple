@@ -1,2 +1,4 @@
 /deploy.sh
 /dist/
+.idea/
+**/.idea/
