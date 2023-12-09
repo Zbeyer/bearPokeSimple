@@ -87,7 +87,7 @@ class MainGame extends Phaser.Scene
 		textArt.setText(text);
 		textArt.scale = 2.0;
 
-		const decayTime = 1_000;
+		const decayTime = 500;
 		let decayTween = scene.tweens.add({targets: textArt, alpha: 0.0, ease: 'Power1', delay:decayTime * 0.5, duration: decayTime});
 		decayTween.on('complete', function () {
 			textArt.destroy();
@@ -99,7 +99,7 @@ class MainGame extends Phaser.Scene
 	drawPokeDust(scene, x, y)
 	{
 		const key = 'pokeDust';
-		const lifeTime = 750;
+		const lifeTime = 1_200;
 		// let emitter = new Phaser.Events.EventEmitter();
 		let emitter = scene.add.particles(x, y, key,
 			{
@@ -132,7 +132,7 @@ class MainGame extends Phaser.Scene
 		{
 			shared.stoppedTime = (new Date()).getTime();
 			shared.isGameOver = true;
-			const lingerTime = 1_250;
+			const lingerTime = 1_800;
 			let timeoutDestroy = setTimeout(() => {
 				this.scene.start('GameOver');
 				this.scene.stop('MainGame');
@@ -161,7 +161,7 @@ class MainGame extends Phaser.Scene
 		let shared = BearPoke.shared();
 		if (shared.isGameOver) return;
 
-		const timerLifeTime = IsDebug ? 18_000 : 2_600;
+		const timerLifeTime = IsDebug ? 18_000 : 2_800;
 
 		let now = new Date().getTime();
 		let lastPoke = BearPoke.shared().lastPoke || now;
@@ -207,10 +207,10 @@ class MainGame extends Phaser.Scene
 		if (shared.drawLimit < 1) return;
 
 		let seed = Math.random()
-		let animalLifeTime = IsDebug ? 10_000 : 1_000 * seed + 800;
+		let animalLifeTime = IsDebug ? 10_000 : 1_600 * seed + 800;
 		seed = seed * 2_000;
 
-		const scaleFactor = 8.00;
+		const scaleFactor = 12.00;
 		const sizeOfSprite = 8 * scaleFactor;
 
 		const widthMin = sizeOfSprite;
@@ -223,6 +223,18 @@ class MainGame extends Phaser.Scene
 		let newAnimalIndex = Math.floor(seed % animalNames.length);
 		let newAnimalName = animalNames[newAnimalIndex];
 		let newArt = scene.add.image(x, y, newAnimalName);
+		let tryAgain = false;
+
+		// scene.images.forEach(function (image) {
+		// 	console.log(image);
+		// }
+		//
+		// if (tryAgain)
+		// {
+		// 	draw(scene);
+		// 	return;
+		// }
+
 		newArt.alpha = 0.0; newArt.setScale(0.0);
 		newArt.setInteractive();
 
