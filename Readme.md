@@ -1,12 +1,7 @@
-## Test
+## Testing
 
 ```
 serve -p 9000
 ```
 
-## Deploy
-
-```
-./deploy.sh -p
-```
-
+A lighter version of [Don't  Poke the Bear](https://github.com/Zbeyer/BearPoke). Designed to be distributed via [Itch.io](https://zbeyer.itch.io/bearpoke)
