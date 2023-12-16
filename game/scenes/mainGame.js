@@ -128,6 +128,8 @@ class MainGame extends Phaser.Scene
 	update ()
 	{
 		let shared = BearPoke.shared();
+		let scoreCard = shared.scoreCard;
+		scoreCard.setText([ 'score: ' + shared.score, ]);
 		if (shared.hearts < 1)
 		{
 			shared.stoppedTime = (new Date()).getTime();
