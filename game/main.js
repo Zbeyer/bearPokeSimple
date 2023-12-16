@@ -62,8 +62,8 @@ class Poker
 			},
 			scale: {
 				mode: Phaser.Scale.ScaleModes.FIT,
-				height: 768,
-				width: 1024,
+				height: 1024,
+				width: 640,
 			},
 			audio: {
 				disableWebAudio: false,
